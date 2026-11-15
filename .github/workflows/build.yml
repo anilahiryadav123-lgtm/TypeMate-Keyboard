@@ -19,11 +19,18 @@ jobs:
         with:
           gradle-version: '8.7'
 
+      - name: Unzip project
+        run: |
+          if [ -f TypeMate-Keyboard.zip ]; then
+            unzip -oq TypeMate-Keyboard.zip -d extracted
+          fi
+
       - name: Find project folder
         id: find
         run: |
           F=$(find . -name settings.gradle -not -path './.git/*' | head -n 1)
           echo "Found: $F"
+          if [ -z "$F" ]; then echo "settings.gradle not found"; exit 1; fi
           echo "dir=$(dirname "$F")" >> "$GITHUB_OUTPUT"
 
       - name: Build APK
